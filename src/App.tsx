@@ -13,8 +13,15 @@ export default function App() {
     insforge.auth.getCurrentUser().then(({ data }) => {
       if (data?.user) {
         setCurrentUser(data.user);
+      } else {
+        // Purge dead tokens to stop endless 401 polling
+        insforge.auth.signOut().catch(() => {});
+        setCurrentUser(null);
       }
-    }).catch(console.error);
+    }).catch((e) => {
+      console.error(e);
+      insforge.auth.signOut().catch(() => {});
+    });
   }, []);
 
   useEffect(() => {
@@ -40,11 +47,19 @@ export default function App() {
   };
 
   const signInWithGoogle = async () => {
-    const { error } = await insforge.auth.signInWithOAuth({
-      provider: 'google',
-      redirectTo: window.location.origin,
-    });
-    if (error) alert(error.message);
+    try {
+      const { data, error } = await insforge.auth.signInWithOAuth({
+        provider: 'google',
+        redirectTo: window.location.origin,
+      });
+      if (error) {
+        alert(error.message);
+      } else if (data?.url) {
+        window.location.href = data.url; // Force redirect if SDK does not auto-route
+      }
+    } catch (e: any) {
+      alert("Auth redirect failed: " + e.message);
+    }
   };
 
   const handleLogout = async () => {
@@ -101,7 +116,7 @@ export default function App() {
       
     } catch (err: any) {
       console.error(err);
-      alert('Error communicating with N.E.O.N.');
+      alert('Error communicating with N.E.O.N. Network failure or token rejection.');
     } finally {
       setIsLoading(false);
       if (currentUser) {
