@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-xl border border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.5)] rounded-2xl;
+  }
+  
+  .glass-input {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-xl focus:border-neon-cyan/50 focus:ring-1 focus:ring-neon-cyan/50 outline-none text-white transition-all shadow-[inset_0_2px_10px_rgba(0,0,0,0.2)];
+  }
+
+  .neon-text-cyan {
+    text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;
+    color: #0ff;
+  }
+  
+  .neon-text-pink {
+    text-shadow: 0 0 5px #f0f, 0 0 10px #f0f, 0 0 20px #f0f;
+    color: #f0f;
+  }
+}
+
+body {
+  background-color: #090a0f;
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(0, 255, 255, 0.08), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(255, 0, 255, 0.08), transparent 25%);
+  color: white;
+  margin: 0;
+  height: 100vh;
+}
